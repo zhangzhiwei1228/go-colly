@@ -22,17 +22,17 @@ func CsdnViews(num int, url string) {
 	c.OnHTML("div.navList-box", func(e *colly.HTMLElement) { //回调函数，查找每篇文章的子链接
 		e.ForEach("article.blog-list-box", func(i int, element *colly.HTMLElement) {
 			//遍历每个article标签
-			http_articleid := element.ChildAttr("a", "href") //得到标签属性
-			c.Visit(http_articleid)                          //递归访问子链接
-			time.Sleep(time.Second)                          //间隔一秒
+			httpArticleId := element.ChildAttr("a", "href") //得到标签属性
+			_ = c.Visit(httpArticleId)                      //递归访问子链接
+			time.Sleep(time.Second)                         //间隔一秒
 		})
 	})
 	c.OnHTML("div.article-header-box", func(e *colly.HTMLElement) { //自动匹配每篇文章的html
-		dom := e.DOM                                   //返回DOM对象
-		title := dom.Find("h1.title-article").Text()   //找到文章标题
-		view_num := dom.Find("span.read-count").Text() //找到每篇文章的访问量
+		dom := e.DOM                                  //返回DOM对象
+		title := dom.Find("h1.title-article").Text()  //找到文章标题
+		viewNum := dom.Find("span.read-count").Text() //找到每篇文章的访问量
 		//注意colly为递归调用，不会重复刷新文章列表的页面，如果从文章列表中获取访问量，则访问量不会改变
-		fmt.Println("访问成功", "标题：", title, "阅读量：", view_num)
+		fmt.Println("访问成功", "标题：", title, "阅读量：", viewNum)
 	})
 	c.OnError(func(response *colly.Response, err error) {
 		fmt.Println("错误", err, response) //如果出错，进行输出
